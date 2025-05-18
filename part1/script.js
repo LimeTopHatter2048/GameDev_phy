@@ -1,9 +1,14 @@
 window.addEventListener('load', function(){
     const canvas = document.getElementById('canvas1');
-    const ctx = document.getElementById('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1280 / 2;
+    canvas.height = 720 / 2;
 
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'white';
+
+    //Objects in JavaScript our so called reference to data types 
     class Player {
         constructor(game){
             this.game = game;
@@ -12,6 +17,9 @@ window.addEventListener('load', function(){
             this.spriteHeight = 91.3;
             this.width = this.spriteWidth/1.2;
             this.height = this.spriteHeight/1.2;
+            this.collisonX = this.game.width * 0.5;
+            this.collisonY = this.game.height * 0.5;
+            this.collisonRadius = 30;
             this.x = this.game.width/2 - this.width/2;
             this.y = this.game.height - this.height - this.game.groundMargin;
             this.vy = 0;
@@ -33,7 +41,7 @@ window.addEventListener('load', function(){
             // vertical movement
 
             // vertical boundaries
-            
+
             // sprite animation
             if (this.frameTimer > this.frameInterval){
                 this.frameTimer = 0;
@@ -44,9 +52,14 @@ window.addEventListener('load', function(){
             }
         }
         draw(context){
-            context.strokeStyle = 'white';
-            if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
-            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+            context.beginPath();
+            context.arc(this.collisonX, this.collisonY, this.collisonRadius, 0, Math.PI * 2);
+            context.save();
+            context.globalAlpha = 0.5;
+            context.fill();
+            context.restore();
+            context.stroke();
+            //context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
     }
     class Game {
@@ -56,13 +69,16 @@ window.addEventListener('load', function(){
             this.height = this.canvas.height;
             this.player = new Player(this);
         }
+        render(context){
+            this.player.draw(context);
+        }
     }
 
     const game = new Game(canvas);
+    game.render(ctx);
     console.log(game);
 
     function animate(){
         
     }
 });
-//Objects in JavaScript our so called reference to data types 
