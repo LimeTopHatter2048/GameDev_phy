@@ -68,12 +68,32 @@ window.addEventListener('load', function(){
             //context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
     }
+
+    class Obstacle {
+        constructor(game){
+            this.game = game;
+            this.collisonX = Math.random() * this.game.width;
+            this.collisonY = Math.random() * this.game.height;
+            this.collisonRadius = 60;
+        }
+        draw(context){
+            context.beginPath();
+            context.arc(this.collisonX, this.collisonY, this.collisonRadius, 0, Math.PI * 2);
+            context.save();
+            context.globalAlpha = 0.5;
+            context.fill();
+            context.restore();
+            context.stroke();
+        }
+    }
     class Game {
         constructor(canvas){
             this.canvas = canvas;
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.player = new Player(this);
+            this.numberOfObstacles = 5;
+            this.obstacles = [];
             this.mouse = {
                 x: this.width * 0.5,
                 y: this.height * 0.5,
@@ -101,10 +121,18 @@ window.addEventListener('load', function(){
         render(context){
             this.player.draw(context);
             this.player.update();
+            this.obstacles.forEach(obstacle => obstacle.draw(context));
+        }
+        init(){
+            for (let i = 0; i < this.numberOfObstacles; i++){
+                this.obstacles.push(new Obstacle(this));
+            }
         }
     }
 
     const game = new Game(canvas);
+    game.init();
+    console.log(game);
     
     function animate(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
