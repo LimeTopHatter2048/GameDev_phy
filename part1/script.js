@@ -12,12 +12,20 @@ window.addEventListener('load', function(){
     class Player {
         constructor(game){
             this.game = game;
-            this.image = document.getElementById("player");
+            //this.image = document.getElementById("player");
             this.collisonX = this.game.width * 0.5;
             this.collisonY = this.game.height * 0.5;
             this.collisonRadius = 30;
+            this.speedX = 0;
+            this.speedY = 0;
         }
-        update(input, deltaTime){
+        update(){
+            this.dx = this.game.mouse.x - this.collisonX;
+            this.dy = this.game.mouse.y - this.collisonY;
+            this.speedX = this.dx/20;
+            this.speedY = this.dy/20;
+            this.collisonX += this.speedX;
+            this.collisonY += this.speedY;
             // horizontal movement
 
             // horizontal boundaries
@@ -27,13 +35,13 @@ window.addEventListener('load', function(){
             // vertical boundaries
 
             // sprite animation
-            if (this.frameTimer > this.frameInterval){
+            /* if (this.frameTimer > this.frameInterval){
                 this.frameTimer = 0;
                 if (this.frameX < this.maxFrame) this.frameX++;
                 else this.frameX = 0;
             } else {
                 this.frameTimer += deltaTime;
-            }
+            } */
         }
         draw(context){
             context.beginPath();
@@ -42,6 +50,12 @@ window.addEventListener('load', function(){
             context.globalAlpha = 0.5;
             context.fill();
             context.restore();
+            context.stroke();
+
+            // line
+            context.beginPath();
+            context.moveTo(this.collisonX, this.collisonY);
+            context.lineTo(this.game.mouse.x, this.game.mouse.y);
             context.stroke();
             //context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
@@ -70,20 +84,24 @@ window.addEventListener('load', function(){
                 this.mouse.pressed = false;
             });
             canvas.addEventListener('mousemove', e => {
-                this.mouse.x = e.offsetX;
-                this.mouse.y = e.offsetY;
-                console.log(this.mouse.x);
+                if (this.mouse.pressed){
+                    this.mouse.x = e.offsetX;
+                    this.mouse.y = e.offsetY;
+                }
             });
         }
         render(context){
             this.player.draw(context);
+            this.player.update();
         }
     }
 
     const game = new Game(canvas);
-    game.render(ctx);
-
+    
     function animate(){
-        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        game.render(ctx);
+        requestAnimationFrame(animate);
     }
+    animate();
 });
