@@ -18,14 +18,22 @@ window.addEventListener('load', function(){
             this.collisonRadius = 30;
             this.speedX = 0;
             this.speedY = 0;
+            this.speedModifier = 5;
         }
         update(){
             this.dx = this.game.mouse.x - this.collisonX;
             this.dy = this.game.mouse.y - this.collisonY;
-            this.speedX = this.dx/20;
-            this.speedY = this.dy/20;
-            this.collisonX += this.speedX;
-            this.collisonY += this.speedY;
+            const distance = Math.hypot(this.dy, this.dx);
+            if (distance > this.speedModifier){
+                this.speedX = this.dx/distance || 0;
+                this.speedY = this.dy/distance || 0;
+            } else {
+                this.speedX = 0;
+                this.speedY = 0;
+            }
+            
+            this.collisonX += this.speedX * this.speedModifier;
+            this.collisonY += this.speedY * this.speedModifier;
             // horizontal movement
 
             // horizontal boundaries
