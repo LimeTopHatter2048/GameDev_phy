@@ -13,25 +13,9 @@ window.addEventListener('load', function(){
         constructor(game){
             this.game = game;
             this.image = document.getElementById("player");
-            this.spriteWidth = 100;
-            this.spriteHeight = 91.3;
-            this.width = this.spriteWidth/1.2;
-            this.height = this.spriteHeight/1.2;
             this.collisonX = this.game.width * 0.5;
             this.collisonY = this.game.height * 0.5;
             this.collisonRadius = 30;
-            this.x = this.game.width/2 - this.width/2;
-            this.y = this.game.height - this.height - this.game.groundMargin;
-            this.vy = 0;
-            this.weight = 1;
-            this.frameX = 0;
-            this.frameY = 0;
-            this.maxFrame= 6;
-            this.fps = 20;
-            this.frameTimer = 0;
-            this.frameInterval = 1000/this.fps;
-            this.speed = 0;
-            this.maxSpeed = 10;
         }
         update(input, deltaTime){
             // horizontal movement
@@ -68,6 +52,28 @@ window.addEventListener('load', function(){
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.player = new Player(this);
+            this.mouse = {
+                x: this.width * 0.5,
+                y: this.height * 0.5,
+                pressed: false
+            }
+
+            // event listeners
+            canvas.addEventListener('mousedown', e => {
+                this.mouse.x = e.offsetX;
+                this.mouse.y = e.offsetY;
+                this.mouse.pressed = true;
+            });
+            canvas.addEventListener('mouseup', e => {
+                this.mouse.x = e.offsetX;
+                this.mouse.y = e.offsetY;
+                this.mouse.pressed = false;
+            });
+            canvas.addEventListener('mousemove', e => {
+                this.mouse.x = e.offsetX;
+                this.mouse.y = e.offsetY;
+                console.log(this.mouse.x);
+            });
         }
         render(context){
             this.player.draw(context);
@@ -76,7 +82,6 @@ window.addEventListener('load', function(){
 
     const game = new Game(canvas);
     game.render(ctx);
-    console.log(game);
 
     function animate(){
         
