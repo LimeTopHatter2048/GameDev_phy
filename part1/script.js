@@ -48,6 +48,18 @@ window.addEventListener('load', function(){
         update(){
             this.dx = this.game.mouse.x - this.collisionX;
             this.dy = this.game.mouse.y - this.collisionY;
+            // sprite animation
+            const angle = Math.atan2(this.dy, this.dx);
+            if (angle < -2.74 || angle > 2.74) this.frameY = 6;
+            else if (angle < -1.96) this.frameY = 7;
+            else if (angle < -1.17) this.frameY = 0;
+            else if (angle < -0.39) this.frameY = 1;
+            else if (angle < 0.39) this.frameY = 2;
+            else if (angle < 1.17) this.frameY = 3;
+            else if (angle < 1.96) this.frameY = 4;
+            else if (angle < 2.74) this.frameY = 5;
+            
+
             const distance = Math.hypot(this.dy, this.dx);
             if (distance > this.speedModifier){
                 this.speedX = this.dx/distance || 0;
