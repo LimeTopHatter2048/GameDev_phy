@@ -5,6 +5,9 @@
 }
 #canvas1 {
     background: url('img/background.png');
+    background-size: cover; /* or 100% 100% */
+    background-repeat: no-repeat;
+    background-position: center;
     position: absolute;
     width: calc(1280px / 2);
     height: calc(720px / 2);

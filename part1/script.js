@@ -74,12 +74,12 @@ window.addEventListener('load', function(){
             this.game = game;
             this.collisonX = Math.random() * this.game.width;
             this.collisonY = Math.random() * this.game.height;
-            this.collisonRadius = 40;
+            this.collisonRadius = 30;
             this.image = document.getElementById('obstacles');
             this.spriteWidth = 250;
             this.spriteHeight = 250;
-            this.width = this.spriteWidth/2;
-            this.height = this.spriteHeight/2;
+            this.width = this.spriteWidth/2.5;
+            this.height = this.spriteHeight/2.5;
             this.spriteX = this.collisonX - this.width * 0.5;
             this.spriteY = this.collisonY - this.height * 0.5 -20;
         }
@@ -145,6 +145,7 @@ window.addEventListener('load', function(){
                         overlap = true;
                     }
                 });
+                
                 if (!overlap){
                     this.obstacles.push(testObstacle);
                 }
