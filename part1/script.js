@@ -34,6 +34,12 @@ window.addEventListener('load', function(){
             
             this.collisonX += this.speedX * this.speedModifier;
             this.collisonY += this.speedY * this.speedModifier;
+            // collisions with obstacles
+            this.game.obstacles.forEach(obstacle => {
+                if (this.game.checkCollision(this, obstacle)){
+                    console.log('collision');
+                };
+            })
             // horizontal movement
 
             // horizontal boundaries
@@ -133,6 +139,13 @@ window.addEventListener('load', function(){
             this.player.draw(context);
             this.player.update();
             this.obstacles.forEach(obstacle => obstacle.draw(context));
+        }
+        checkCollision(a, b){
+            const dx = a.collisonX - b.collisonX;
+            const dy = a.collisonY - b.collisonY;
+            const distance = Math.hypot(dy, dx);
+            const sumOfRadii = a.collisonRadius + b.collisonRadius;
+            return (distance < sumOfRadii);
         }
         init(){
             let attempts = 0;
