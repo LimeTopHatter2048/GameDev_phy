@@ -79,7 +79,7 @@ window.addEventListener('load', function(){
 
             // horizontal boundaries
             if(this.collisionX < this.collisionRadius) this.collisionX = this.collisionRadius; 
-            else if (this.collisionX > this.game.width - this.collisionRadius) this.collisionX > this.game.width - this.collisionRadius;
+            else if (this.collisionX > this.game.width - this.collisionRadius) this.collisionX = this.game.width - this.collisionRadius;
 
             // vertical movement
 
@@ -144,8 +144,9 @@ window.addEventListener('load', function(){
         constructor(game){
             this.game = game;
             this.collisionRadius = 20;
+            this.margin = this.collisionRadius * 3;
             this.collisionX = this.margin + (Math.random() * (this.game.width - this.margin * 2));
-            this.collisionY = this.game.topMargin + (Math.random() * ( this.game.height - this.game.topMargin - this.margin));
+            this.collisionY = this.game.topMargin + this.margin + Math.random() * (this.game.height - this.game.topMargin - 2 * this.margin);
             this.image = document.getElementById('egg');
             this.spriteWidth = 110;
             this.spriteHeight = 135;
@@ -172,16 +173,16 @@ window.addEventListener('load', function(){
             this.canvas = canvas;
             this.width = this.canvas.width;
             this.height = this.canvas.height;
-            this.topMargin = 60;
+            this.topMargin = 90;
             this.debug = false;
             this.player = new Player(this);
             this.fps = 70;
             this.timer = 0;
             this.interval = 1000/this.fps;
             this.eggTimer = 0;
-            this.eggInterval = 1000;
+            this.eggInterval = 100;
             this.numberOfObstacles = 10;
-            this.maxEggs = 5;
+            this.maxEggs = 50;
             this.obstacles = [];
             this.eggs = [];
             this.mouse = {
