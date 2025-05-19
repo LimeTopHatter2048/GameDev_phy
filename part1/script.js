@@ -139,6 +139,9 @@ window.addEventListener('load', function(){
                 context.stroke();
             }   
         }
+        update(){
+
+        }
     }
     class Egg {
         constructor(game){
@@ -230,14 +233,16 @@ window.addEventListener('load', function(){
         }
         render(context, deltaTime){
             if( this.timer > this.interval){
-                ctx.clearRect(0, 0, this.width, this.height);
-                this.obstacles.forEach(obstacle => obstacle.draw(context));
-                this.eggs.forEach(egg => {
-                    egg.draw(context)
-                    egg.update();
+                context.clearRect(0, 0, this.width, this.height);
+                this.gameObjects = [this.player, ...this.eggs, ...this.obstacles];
+                // sort by vertical position
+                this.gameObjects.sort((a,b) => {
+                    return a.collisionY - b.collisionY;
                 });
-                this.player.draw(context);
-                this.player.update();
+                this.gameObjects.forEach(object => {
+                    object.draw(context)
+                    object.update();
+                });
                 this.timer = 0;
             }
             this.timer += deltaTime;
@@ -246,7 +251,6 @@ window.addEventListener('load', function(){
             if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs){
                 this.addEgg();
                 this.eggTimer = 0;
-                console.log(this.eggs);
             } else {
                 this.eggTimer += deltaTime; 
             }
