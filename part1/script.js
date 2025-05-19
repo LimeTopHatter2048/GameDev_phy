@@ -98,7 +98,7 @@ window.addEventListener('load', function(){
                     this.collisionX = obstacle.collisionX + (sumOfRadii + 1) * unit_x;
                     this.collisionY = obstacle.collisionY + (sumOfRadii + 1) * unit_y;
                 }
-            })
+            });
 
             // sprite animation
             /* if (this.frameTimer > this.frameInterval){
@@ -152,8 +152,8 @@ window.addEventListener('load', function(){
             this.spriteHeight = 135;
             this.width = this.spriteWidth/2.5;
             this.height = this.spriteHeight/2.5;
-            this.spriteX = this.collisionX - this.width * 0.5;
-            this.spriteY = this.collisionY - this.height * 0.5 -10;
+            this.spriteX;
+            this.spriteY;
         }
         draw(context){
             context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
@@ -166,6 +166,21 @@ window.addEventListener('load', function(){
                 context.restore();
                 context.stroke();
             }   
+        }
+        update(){
+            this.spriteX = this.collisionX - this.width * 0.5;
+            this.spriteY = this.collisionY - this.height * 0.5 - 10;
+            // collisions with obstacles
+            let collisionObjects = [this.game.player, ...this.game.obstacles];
+            collisionObjects.forEach(object => {
+                let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object);
+                if(collision){
+                    const unit_x = dx / distance;
+                    const unit_y = dy / distance;
+                    this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x;
+                    this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y;
+                }
+            });
         }
     }
     class Game {
@@ -180,9 +195,9 @@ window.addEventListener('load', function(){
             this.timer = 0;
             this.interval = 1000/this.fps;
             this.eggTimer = 0;
-            this.eggInterval = 100;
+            this.eggInterval = 1000;
             this.numberOfObstacles = 10;
-            this.maxEggs = 50;
+            this.maxEggs = 10;
             this.obstacles = [];
             this.eggs = [];
             this.mouse = {
@@ -217,7 +232,10 @@ window.addEventListener('load', function(){
             if( this.timer > this.interval){
                 ctx.clearRect(0, 0, this.width, this.height);
                 this.obstacles.forEach(obstacle => obstacle.draw(context));
-                this.eggs.forEach(egg => egg.draw(context));
+                this.eggs.forEach(egg => {
+                    egg.draw(context)
+                    egg.update();
+                });
                 this.player.draw(context);
                 this.player.update();
                 this.timer = 0;
