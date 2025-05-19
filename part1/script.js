@@ -17,7 +17,7 @@ window.addEventListener('load', function(){
             this.collisionRadius = 30;
             this.image = document.getElementById('bull');
             this.spriteWidth = 255;
-            this.spriteHeight = 255;
+            this.spriteHeight = 256;
             this.width = this.spriteWidth/2.5;
             this.height = this.spriteHeight/2.5;
             this.spriteX;
@@ -148,6 +148,9 @@ window.addEventListener('load', function(){
             this.topMargin = 60;
             this.debug = false;
             this.player = new Player(this);
+            this.fps = 70;
+            this.timer = 0;
+            this.interval = 1000/this.fps;
             this.numberOfObstacles = 10;
             this.obstacles = [];
             this.mouse = {
@@ -178,10 +181,15 @@ window.addEventListener('load', function(){
                 console.log(this.debug);
             });
         }
-        render(context){
-            this.player.draw(context);
-            this.player.update();
-            this.obstacles.forEach(obstacle => obstacle.draw(context));
+        render(context, deltaTime){
+            if( this.timer > this.interval){
+                ctx.clearRect(0, 0, this.width, this.height);
+                this.obstacles.forEach(obstacle => obstacle.draw(context));
+                this.player.draw(context);
+                this.player.update();
+                this.timer = 0;
+            }
+            this.timer += deltaTime;
         }
         checkCollision(a, b){
             const dx = a.collisionX - b.collisionX;
@@ -218,10 +226,14 @@ window.addEventListener('load', function(){
     game.init();
     console.log(game);
     
-    function animate(){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        game.render(ctx);
+    let lastTime = 0;
+    function animate(timeStamp){
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
+        
+        game.render(ctx, deltaTime);
         requestAnimationFrame(animate);
     }
-    animate();
+    animate(0);
 });
