@@ -31,14 +31,15 @@ window.addEventListener('load', function(){
         }
         draw(context){
             context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
-            context.beginPath();
-            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-            context.save();
-            context.globalAlpha = 0.5;
-            context.fill();
-            context.restore();
-            context.stroke();
-
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+                context.save();
+                context.globalAlpha = 0.5;
+                context.fill();
+                context.restore();
+                context.stroke();
+            }
             // line
             context.beginPath();
             context.moveTo(this.collisionX, this.collisionY);
@@ -123,13 +124,15 @@ window.addEventListener('load', function(){
         }
         draw(context){
             context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
-            context.beginPath();
-            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-            context.save();
-            context.globalAlpha = 0.5;
-            context.fill();
-            context.restore();
-            context.stroke();
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+                context.save();
+                context.globalAlpha = 0.5;
+                context.fill();
+                context.restore();
+                context.stroke();
+            }   
         }
     }
     class Game {
@@ -138,6 +141,7 @@ window.addEventListener('load', function(){
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.topMargin = 60;
+            this.debug = false;
             this.player = new Player(this);
             this.numberOfObstacles = 10;
             this.obstacles = [];
@@ -163,6 +167,10 @@ window.addEventListener('load', function(){
                     this.mouse.x = e.offsetX;
                     this.mouse.y = e.offsetY;
                 }
+            });
+            window.addEventListener('keydown', e => {
+                if (e.key == 'd') this.debug = !this.debug;
+                console.log(this.debug);
             });
         }
         render(context){
