@@ -12,13 +12,38 @@ window.addEventListener('load', function(){
     class Player {
         constructor(game){
             this.game = game;
-            //this.image = document.getElementById("player");
             this.collisionX = this.game.width * 0.5;
             this.collisionY = this.game.height * 0.5;
             this.collisionRadius = 30;
+            this.image = document.getElementById('bull');
+            this.spriteWidth = 255;
+            this.spriteHeight = 255;
+            this.width = this.spriteWidth/2.5;
+            this.height = this.spriteHeight/2.5;
+            this.spriteX;
+            this.spriteY;
+            this.frameX = 0;
+            this.frameY = 0;
             this.speedX = 0;
+
             this.speedY = 0;
             this.speedModifier = 5;
+        }
+        draw(context){
+            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
+            context.beginPath();
+            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+            context.save();
+            context.globalAlpha = 0.5;
+            context.fill();
+            context.restore();
+            context.stroke();
+
+            // line
+            context.beginPath();
+            context.moveTo(this.collisionX, this.collisionY);
+            context.lineTo(this.game.mouse.x, this.game.mouse.y);
+            context.stroke();
         }
         update(){
             this.dx = this.game.mouse.x - this.collisionX;
@@ -34,6 +59,9 @@ window.addEventListener('load', function(){
             
             this.collisionX += this.speedX * this.speedModifier;
             this.collisionY += this.speedY * this.speedModifier;
+
+            this.spriteX = this.collisionX - this.width * 0.5;
+            this.spriteY = this.collisionY - this.height * 0.5;
             // collisions with obstacles
             this.game.obstacles.forEach(obstacle => {
                 // [(distance < sumOfRadii), distance, sumOfRadii, dx, dy]
@@ -62,22 +90,6 @@ window.addEventListener('load', function(){
             } else {
                 this.frameTimer += deltaTime;
             } */
-        }
-        draw(context){
-            context.beginPath();
-            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-            context.save();
-            context.globalAlpha = 0.5;
-            context.fill();
-            context.restore();
-            context.stroke();
-
-            // line
-            context.beginPath();
-            context.moveTo(this.collisionX, this.collisionY);
-            context.lineTo(this.game.mouse.x, this.game.mouse.y);
-            context.stroke();
-            //context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
     }
 
