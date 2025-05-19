@@ -186,6 +186,40 @@ window.addEventListener('load', function(){
             });
         }
     }
+
+    class Larva {
+        constructor(game, x, y){
+            this.game = game;
+            this.collisionX = x;
+            this.collisionY = y;
+            this.collisionRadius = 20;
+            this.speedY = Math.random() * 2;
+            this.image = document.getElementById('larva');
+            this.spriteWidth = 150;
+            this.spriteHeight = 150;
+            this.width = this.spriteWidth/2.5;
+            this.height = this.spriteHeight/2.5;
+            this.spriteX;
+            this.spriteY;
+        }
+        draw(context){
+            context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
+            if (this.game.debug){
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+                context.save();
+                context.globalAlpha = 0.5;
+                context.fill();
+                context.restore();
+                context.stroke();
+            } 
+        }
+        update(){
+            this.spriteX = this.collisionX - this.width * 0.5;
+            this.spriteY = this.collisionY - this.height * 0.5 - 10;
+            this.collisionY -= this.speedY;
+        }
+    }
     class Enemy {
         constructor(game){
             this.game = game;
