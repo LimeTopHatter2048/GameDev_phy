@@ -2,6 +2,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Exile", system-ui;
+    font-weight: 400;
+    font-style: normal;
 }
 #canvas1 {
     background: url('img/background.png');
