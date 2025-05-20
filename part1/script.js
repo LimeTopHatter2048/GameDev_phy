@@ -274,7 +274,7 @@ window.addEventListener('load', function(){
             this.collisionRadius = 20;
             this.margin = this.collisionRadius * 3;
             this.speedX = Math.random() * 3 + 2;
-            this.image = document.getElementById('toad');
+            this.image = document.getElementById('toads');
             this.spriteWidth = 140;
             this.spriteHeight = 260;
             this.width = this.spriteWidth/2.5;
@@ -283,10 +283,11 @@ window.addEventListener('load', function(){
             this.collisionY = this.game.topMargin + (Math.random() * (this.game.height - this.game.topMargin));
             this.spriteX;
             this.spriteY;
-
+            this.frameX = 0;
+            this.frameY = Math.floor(Math.random() * 4);
         }
         draw(context){
-            context.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
+            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
             if (this.game.debug){
                 context.beginPath();
                 context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
@@ -304,6 +305,7 @@ window.addEventListener('load', function(){
             if (this.spriteX + this.width < 0){
                 this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5;
                 this.collisionY = this.game.topMargin + (Math.random() * (this.game.height - this.game.topMargin));
+                this.frameY = Math.floor(Math.random() * 4);
             }
             // collisions with obstacles
             let collisionObjects = [this.game.player, ...this.game.obstacles, ...this.game.eggs];
@@ -356,7 +358,7 @@ window.addEventListener('load', function(){
     class Spark extends Particle {
         update(){
             this.angle += this.va * 0.5;
-            this.collisionX -= Math.cos/(this.angle) * this.speedX;
+            this.collisionX -= Math.cos(this.angle) * this.speedX;
             this.collisionY -= Math.sin(this.angle) * this.speedY;
             if (this.radius > 0.1) this.radius -= 0.05;
             if (this.radius < 0.2){
@@ -380,7 +382,7 @@ window.addEventListener('load', function(){
             this.eggTimer = 0;
             this.eggInterval = 1000;
             this.numberOfObstacles = 10;
-            this.maxEggs = 10;
+            this.maxEggs = 5;
             this.obstacles = [];
             this.eggs = [];
             this.enemies = [];
@@ -469,9 +471,8 @@ window.addEventListener('load', function(){
             this.particles = this.particles.filter(object => !object.markedForDeletion);
         }
         init(){
-            for (let i = 0; i < 3; i++){
+            for (let i = 0; i < 5; i++){
                 this.addEnemy();
-                console.log(this.enemies);
             }
             let attempts = 0;
             while (this.obstacles.length < this.numberOfObstacles && attempts < 500){
